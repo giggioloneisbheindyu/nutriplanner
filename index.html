@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nutriplanner</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Importa font Roboto -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        /* Stili CSS aggiornati per la formattazione */
+body {
+    font-family: "Roboto", sans-serif; /* Font moderno */
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5; /* Colore di sfondo chiaro */
+    color: #333; /* Colore del testo scuro per un buon contrasto */
+  }
+  
+  header {
+    background-color: #6200ea; /* Colore più vivo per l'intestazione */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  nav {
+    background-color: #3700b3; /* Colore più scuro per il menu di navigazione */
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 15px;
+    padding: 10px 15px;
+    border-radius: 4px; /* Angoli arrotondati */
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  nav a:hover {
+    background-color: #6200ea; /* Effetto hover */
+    color: #fff;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  
+  .day {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Angoli arrotondati */
+    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra per effetto di profondità */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .day:hover {
+    transform: scale(1.03); /* Leggero effetto zoom */
+  }
+  
+  h2 {
+    color: #6200ea; /* Colore per i titoli */
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .meal-type {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  ul li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9; /* Sfondo leggero per gli elementi della lista */
+    border-radius: 4px; /* Angoli arrotondati */
+  }
+  
+  button {
+    background-color: #6200ea; /* Colore dei pulsanti */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px; /* Angoli arrotondati */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif; /* Font moderno */
+  }
+  
+  button:hover {
+    background-color: #3700b3; /* Effetto hover per i pulsanti */
+  }
+  
+  .totals-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+  }
+  
+  .nutrition-details {
+    background-color: #eee;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+  .dettagli-nutrizionali {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dettagli-nutrizionali h3 {
+    margin-top: 0;
+  }
+  
+  .dettagli-nutrizionali ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .dettagli-nutrizionali ul li {
+    margin-bottom: 5px;
+  }
+  
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+    padding: 0 2px; /* Aggiunge un po' di spazio orizzontale */
+    margin: 0 1px; /* Aggiunge un piccolo margine tra le parole */
+    transform-origin: center bottom; /* L'ingrandimento parte dal basso centro */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  
+  .tooltip:hover {
+    transform: scale(1.1); /* Riduci da 1.2 a 1.1 per un ingrandimento del 10% */
+    z-index: 1; /* Assicura che l'elemento ingrandito sia sopra gli altri */
+    transform: translateY(-2px); /* Solleva leggermente la parola */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra sottile */
+    background-color: #6200ea; /* Colore di sfondo al passaggio del mouse */
+    border-radius: 3px; /* Arrotonda leggermente gli angoli */
+    padding: 0 4px; /* Aggiunge un po' di padding */
+        transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      background-color: rgba(98, 0, 234, 0.1); /* Colore leggero di sfondo */
+      border-radius: 3px;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 300px;
+    background-color: #f9f9f9;
+    color: #000000;
+    text-align: left;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 2;
+    top: 100%;
+    left: 50%;
+    margin-left: -150px;
+    opacity: 0;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  a {
+    text-decoration: none !important;
+    font-family: "Roboto", sans-serif !important;
+  }
+  
+  a:hover {
+    text-decoration: none !important;
+  }
+  
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Nutriplanner</h1>
+    </header>
+    <div class="container">
+      <div class="day">
+        <h2>Colazione</h2>
+        <ul>
+          <li><strong>Calorie:</strong> 485 kcal</li>
+          <li><strong>Carboidrati:</strong> 64,8g</li>
+          <li><strong>Proteine:</strong> 27,8g</li>
+          <li><strong>Grassi:</strong> 12,3g</li>
+        </ul>
+        <button onclick="mostraDettagliNutrizionali(this)">
+          Mostra cibi e grammature
+        </button>
+        <div class="dettagli-nutrizionali" style="display: none">
+          <h3>Dettagli dei Cibi</h3>
+          <ul>
+            <li>
+              <strong>Carboidrati:</strong>
+              <a href="#" class="tooltip"
+                >fette biscottate (80g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 336 kcal</li>
+                    <li><strong>Carboidrati:</strong> 64 g</li>
+                    <li><strong>Proteine:</strong> 8g</li>
+                    <li><strong>Grassi:</strong> 4g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >pane integrale (115g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 290 kcal</li>
+                    <li><strong>Carboidrati:</strong> 50 g</li>
+                    <li><strong>Proteine:</strong> 10g</li>
+                    <li><strong>Grassi:</strong> 4g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >frutta(300g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 180 kcal</li>
+                    <li><strong>Carboidrati:</strong> 45 g</li>
+                    <li><strong>Proteine:</strong> 1g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >piadina(100g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 305 kcal</li>
+                    <li><strong>Carboidrati:</strong> 48 g</li>
+                    <li><strong>Proteine:</strong> 7g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >cereali(80g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 300 kcal</li>
+                    <li><strong>Carboidrati:</strong> 60 g</li>
+                    <li><strong>Proteine:</strong> 6g</li>
+                    <li><strong>Grassi:</strong> 3g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Proteine:</strong>
+              <a href="#" class="tooltip"
+                >Uova (2 pezzi ma niente fonte di grassi),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 168 kcal</li>
+                    <li><strong>Carboidrati:</strong> 1.2 g</li>
+                    <li><strong>Proteine:</strong> 14g</li>
+                    <li><strong>Grassi:</strong> 11g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Yogurt greco 0% (150g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 90 kcal</li>
+                    <li><strong>Carboidrati:</strong> 6 g</li>
+                    <li><strong>Proteine:</strong> 15g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >fesa di tacchino(80g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80 kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 18g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >proteine in polvere del siero 90% (20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80 kcal</li>
+                    <li><strong>Carboidrati:</strong> 1 g</li>
+                    <li><strong>Proteine:</strong> 18g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >prosciutto crudo(50g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 150 kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 15g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Grassi:</strong>
+              <a href="#" class="tooltip"
+                >mandorle (a15g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 87 kcal</li>
+                    <li><strong>Carboidrati:</strong> 3 g</li>
+                    <li><strong>Proteine:</strong> 3g</li>
+                    <li><strong>Grassi:</strong> 8g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >cioccolato extra fondente 85% lindt (o crema spalmabile)(20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 108 kcal</li>
+                    <li><strong>Carboidrati:</strong> 6 g</li>
+                    <li><strong>Proteine:</strong> 2g</li>
+                    <li><strong>Grassi:</strong> 8g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >anacardi(20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 110 kcal</li>
+                    <li><strong>Carboidrati:</strong> 6 g</li>
+                    <li><strong>Proteine:</strong> 4g</li>
+                    <li><strong>Grassi:</strong> 9g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >burro di arachidi/arachidi(20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 115kcal</li>
+                    <li><strong>Carboidrati:</strong> 4 g</li>
+                    <li><strong>Proteine:</strong> 5g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >cocco grattugiato (10g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 66kcal</li>
+                    <li><strong>Carboidrati:</strong> 2 g</li>
+                    <li><strong>Proteine:</strong> 1g</li>
+                    <li><strong>Grassi:</strong> 6g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >macadamia(10g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 72kcal</li>
+                    <li><strong>Carboidrati:</strong> 1 g</li>
+                    <li><strong>Proteine:</strong> 1g</li>
+                    <li><strong>Grassi:</strong> 7g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >nocciole(10g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 62kcal</li>
+                    <li><strong>Carboidrati:</strong> 2 g</li>
+                    <li><strong>Proteine:</strong> 1.5g</li>
+                    <li><strong>Grassi:</strong> 6g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >pinoli(20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 130kcal</li>
+                    <li><strong>Carboidrati:</strong> 5 g</li>
+                    <li><strong>Proteine:</strong> 3g</li>
+                    <li><strong>Grassi:</strong> 11g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="day">
+        <h2>Spuntini/Merenda</h2>
+        <ul>
+          <li><strong>Calorie:</strong> 275 kcal</li>
+          <li><strong>Carboidrati:</strong> 41,8g</li>
+          <li><strong>Proteine:</strong> 19,2g</li>
+          <li><strong>Grassi:</strong> 3,3g</li>
+        </ul>
+        <button onclick="mostraDettagliNutrizionali(this)">
+          Mostra cibi e grammature
+        </button>
+        <div class="dettagli-nutrizionali" style="display: none">
+          <h3>Dettagli dei Cibi</h3>
+          <ul>
+            <li>
+              <strong>Carboidrati:</strong>
+              <a href="#" class="tooltip"
+                >gallette di riso (50g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 190kcal</li>
+                    <li><strong>Carboidrati:</strong> 40 g</li>
+                    <li><strong>Proteine:</strong> 4g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >muesli (50g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 190kcal</li>
+                    <li><strong>Carboidrati:</strong> 34 g</li>
+                    <li><strong>Proteine:</strong> 5g</li>
+                    <li><strong>Grassi:</strong> 4g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >pane di segale (80g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 250kcal</li>
+                    <li><strong>Carboidrati:</strong> 45 g</li>
+                    <li><strong>Proteine:</strong> 7g</li>
+                    <li><strong>Grassi:</strong> 3g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Frutta (150g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 90kcal</li>
+                    <li><strong>Carboidrati:</strong> 22 g</li>
+                    <li><strong>Proteine:</strong> 0g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Proteine:</strong>
+              <a href="#" class="tooltip"
+                >prosciutto crudo (50g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 150kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 15g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                tonno al naturale (70g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 70kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 15g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                yogurt greco Fage Total 0% (130g) (o mezzo budino proteico),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 87kcal</li>
+                    <li><strong>Carboidrati:</strong> 5 g</li>
+                    <li><strong>Proteine:</strong> 15g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >proteine in polvere del siero 90% (20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80 kcal</li>
+                    <li><strong>Carboidrati:</strong> 1 g</li>
+                    <li><strong>Proteine:</strong> 18g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href=""></a
+              ><a href="#" class="tooltip">
+                bresaola (50g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 120kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 21g</li>
+                    <li><strong>Grassi:</strong> 2g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >fesa di tacchino (70g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 70kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 16g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >uova(1 pezzo per spuntino),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 84kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 7g</li>
+                    <li><strong>Grassi:</strong> 6g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Simmenthal(70g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 120 kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 12g</li>
+                    <li><strong>Grassi:</strong> 8g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >uova(1 pezzo per spuntino),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 84kcal</li>
+                    <li><strong>Carboidrati:</strong> 0 g</li>
+                    <li><strong>Proteine:</strong> 7g</li>
+                    <li><strong>Grassi:</strong> 6g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="day">
+        <h2>Pranzo</h2>
+        <ul>
+          <li><strong>Calorie:</strong> 767 kcal</li>
+          <li><strong>Carboidrati:</strong> 97,1g</li>
+          <li><strong>Proteine:</strong> 62,6g</li>
+          <li><strong>Grassi:</strong> 14,2g</li>
+        </ul>
+        <button onclick="mostraDettagliNutrizionali(this)">
+          Mostra cibi e grammature
+        </button>
+        <div class="dettagli-nutrizionali" style="display: none">
+          <h3>Dettagli dei Cibi</h3>
+          <ul>
+            <li>
+              <strong>Carboidrati:</strong>
+              <a href="#" class="tooltip"
+                >Pasta (130g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 467kcal</li>
+                    <li><strong>Carboidrati:</strong> 90g</li>
+                    <li><strong>Proteine:</strong> 18g</li>
+                    <li><strong>Grassi:</strong> 3g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Pane integrale (190g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 475kcal</li>
+                    <li><strong>Carboidrati:</strong> 87g</li>
+                    <li><strong>Proteine:</strong> 16g</li>
+                    <li><strong>Grassi:</strong> 7g</li>
+                  </ul>
+                </span>
+              </a>
+              <a href="#" class="tooltip"
+                >Riso (130g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 454kcal</li>
+                    <li><strong>Carboidrati:</strong> 101g</li>
+                    <li><strong>Proteine:</strong> 9,6g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Patate (510g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 408kcal</li>
+                    <li><strong>Carboidrati:</strong> 81g</li>
+                    <li><strong>Proteine:</strong> 9,6g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Wraps della metro (140g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 465kcal</li>
+                    <li><strong>Carboidrati:</strong> 75g</li>
+                    <li><strong>Proteine:</strong> 13g</li>
+                    <li><strong>Grassi:</strong> 11g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >gnocchi di patate(350g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 490kcal</li>
+                    <li><strong>Carboidrati:</strong> 100g</li>
+                    <li><strong>Proteine:</strong> 10g</li>
+                    <li><strong>Grassi:</strong> 2g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Proteine:</strong>
+              <a href="#" class="tooltip">
+                Filetto magro di manzo (140g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 210kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 30g</li>
+                    <li><strong>Grassi:</strong> 8g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Fesa di tacchino (170g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 170kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 39g</li>
+                    <li><strong>Grassi:</strong> 2g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Tonno (180g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 180kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 36g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Macinato di manzo magro (150g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 200kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 30g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Petto di pollo (180g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 210kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 40g</li>
+                    <li><strong>Grassi:</strong> 4g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Polpo (230g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 150kcal</li>
+                    <li><strong>Carboidrati:</strong> 1g</li>
+                    <li><strong>Proteine:</strong> 30g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Hamburger bovino (120g)
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 280kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 25g</li>
+                    <li><strong>Grassi:</strong> 20g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Grassi:</strong>
+              <a href="#" class="tooltip">
+                Olio d'oliva (10g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 90kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 0g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Grana Padano (20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80kcal</li>
+                    <li><strong>Carboidrati:</strong> 1g</li>
+                    <li><strong>Proteine:</strong> 7g</li>
+                    <li><strong>Grassi:</strong> 6g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Pesto (20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 120kcal</li>
+                    <li><strong>Carboidrati:</strong> 1g</li>
+                    <li><strong>Proteine:</strong> 2g</li>
+                    <li><strong>Grassi:</strong> 12g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>verdure:</strong>
+              <a href="#" class="tooltip">
+                Funghi (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 40kcal</li>
+                    <li><strong>Carboidrati:</strong> 7g</li>
+                    <li><strong>Proteine:</strong> 4g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Carote (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80kcal</li>
+                    <li><strong>Carboidrati:</strong> 19g</li>
+                    <li><strong>Proteine:</strong> 1.5g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Pomodorini (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 36kcal</li>
+                    <li><strong>Carboidrati:</strong> 7g</li>
+                    <li><strong>Proteine:</strong> 1g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Spinaci (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 50kcal</li>
+                    <li><strong>Carboidrati:</strong> 8g</li>
+                    <li><strong>Proteine:</strong> 5g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Zucchine a quadretti (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 40kcal</li>
+                    <li><strong>Carboidrati:</strong> 8g</li>
+                    <li><strong>Proteine:</strong> 2g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="day">
+        <h2>Cena</h2>
+        <ul>
+          <li><strong>Calorie:</strong> 767 kcal</li>
+          <li><strong>Carboidrati:</strong> 97,1g</li>
+          <li><strong>Proteine:</strong> 62,6g</li>
+          <li><strong>Grassi:</strong> 14,2g</li>
+        </ul>
+        <button onclick="mostraDettagliNutrizionali(this)">
+          Mostra cibi e grammature
+        </button>
+        <div class="dettagli-nutrizionali" style="display: none">
+          <h3>Dettagli dei Cibi</h3>
+          <ul>
+            <li>
+              <strong>Carboidrati:</strong>
+              <a href="#" class="tooltip"
+                >Pasta (130g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 467kcal</li>
+                    <li><strong>Carboidrati:</strong> 90g</li>
+                    <li><strong>Proteine:</strong> 18g</li>
+                    <li><strong>Grassi:</strong> 3g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Pane integrale (190g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 475kcal</li>
+                    <li><strong>Carboidrati:</strong> 87g</li>
+                    <li><strong>Proteine:</strong> 16g</li>
+                    <li><strong>Grassi:</strong> 7g</li>
+                  </ul>
+                </span>
+              </a>
+              <a href="#" class="tooltip"
+                >Riso (130g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 454kcal</li>
+                    <li><strong>Carboidrati:</strong> 101g</li>
+                    <li><strong>Proteine:</strong> 9,6g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Patate (510g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 408kcal</li>
+                    <li><strong>Carboidrati:</strong> 81g</li>
+                    <li><strong>Proteine:</strong> 9,6g</li>
+                    <li><strong>Grassi:</strong> 0g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >Wraps della metro (140g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 465kcal</li>
+                    <li><strong>Carboidrati:</strong> 75g</li>
+                    <li><strong>Proteine:</strong> 13g</li>
+                    <li><strong>Grassi:</strong> 11g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip"
+                >gnocchi di patate(350g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 490kcal</li>
+                    <li><strong>Carboidrati:</strong> 100g</li>
+                    <li><strong>Proteine:</strong> 10g</li>
+                    <li><strong>Grassi:</strong> 2g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Proteine:</strong>
+              <a href="#" class="tooltip">
+                Filetto magro di manzo (140g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 210kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 30g</li>
+                    <li><strong>Grassi:</strong> 8g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Fesa di tacchino (170g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 170kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 39g</li>
+                    <li><strong>Grassi:</strong> 2g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Tonno (180g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 180kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 36g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Macinato di manzo magro (150g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 200kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 30g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Petto di pollo (180g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 210kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 40g</li>
+                    <li><strong>Grassi:</strong> 4g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Polpo (230g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 150kcal</li>
+                    <li><strong>Carboidrati:</strong> 1g</li>
+                    <li><strong>Proteine:</strong> 30g</li>
+                    <li><strong>Grassi:</strong> 1g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Hamburger bovino (120g)
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 280kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 25g</li>
+                    <li><strong>Grassi:</strong> 20g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>Grassi:</strong>
+              <a href="#" class="tooltip">
+                Olio d'oliva (10g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 90kcal</li>
+                    <li><strong>Carboidrati:</strong> 0g</li>
+                    <li><strong>Proteine:</strong> 0g</li>
+                    <li><strong>Grassi:</strong> 10g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Grana Padano (20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80kcal</li>
+                    <li><strong>Carboidrati:</strong> 1g</li>
+                    <li><strong>Proteine:</strong> 7g</li>
+                    <li><strong>Grassi:</strong> 6g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Pesto (20g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 120kcal</li>
+                    <li><strong>Carboidrati:</strong> 1g</li>
+                    <li><strong>Proteine:</strong> 2g</li>
+                    <li><strong>Grassi:</strong> 12g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+            <li>
+              <strong>verdure:</strong>
+              <a href="#" class="tooltip">
+                Funghi (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 40kcal</li>
+                    <li><strong>Carboidrati:</strong> 7g</li>
+                    <li><strong>Proteine:</strong> 4g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Carote (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 80kcal</li>
+                    <li><strong>Carboidrati:</strong> 19g</li>
+                    <li><strong>Proteine:</strong> 1.5g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Pomodorini (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 36kcal</li>
+                    <li><strong>Carboidrati:</strong> 7g</li>
+                    <li><strong>Proteine:</strong> 1g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Spinaci (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 50kcal</li>
+                    <li><strong>Carboidrati:</strong> 8g</li>
+                    <li><strong>Proteine:</strong> 5g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+
+              <a href="#" class="tooltip">
+                Zucchine a quadretti (200g),
+                <span class="tooltiptext">
+                  <ul>
+                    <li><strong>Calorie:</strong> 40kcal</li>
+                    <li><strong>Carboidrati:</strong> 8g</li>
+                    <li><strong>Proteine:</strong> 2g</li>
+                    <li><strong>Grassi:</strong> 0.5g</li>
+                  </ul>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script>
+        function mostraDettagliNutrizionali(button) {
+            // Trova il div .dettagli-nutrizionali più vicino al bottone cliccato
+            const dettagliDiv = button.nextElementSibling;
+          
+            // Alterna la visibilità del div .dettagli-nutrizionali
+            if (dettagliDiv.style.display === "none") {
+              dettagliDiv.style.display = "block";
+              button.textContent = "Nascondi cibi e grammature";
+            } else {
+              dettagliDiv.style.display = "none";
+              button.textContent = "Mostra cibi e grammature";
+            }
+          }
+          document.querySelectorAll('.tooltip').forEach(tooltip => {
+            tooltip.addEventListener('mouseover', function() {
+                this.style.transform = 'scale(1.0)';
+            });
+            tooltip.addEventListener('mouseout', function() {
+                this.style.transform = 'scale(1)';
+            });
+          });
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+              .then((reg) => console.log('Service worker registered', reg))
+              .catch((err) => console.log('Service worker not registered', err));
+          }
+    </script>
+  </body>
+</html>
